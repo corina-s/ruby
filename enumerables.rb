@@ -4,19 +4,21 @@
 
 class Array
     def my_each(&prc)
-        for(i=0; i < self.length; i++){
+        i=0 
+        while i < self.length
             prc.call(self[i])
-        }
-        return self
+            i+=1 
+        end
+        self
     end
 
     def my_select(&prc)
         selected = []
-        for(i=0; i < self.length; i++){
-            if (prc.call(self[i])){
-                selected << self[i]
-            }
-        }
+        self.my_each do |el|
+            if (prc.call(el))
+                selected << el
+            end
+        end
         selected
     end
 
@@ -29,4 +31,28 @@ class Array
         end
         arr
     end
+
+    def my_any?(&prc)
+        self.my_each do |el|
+            return true if prc.call(el)
+        end
+        false
+    end
+
+    def my_all?(&prc)
+        self.my_each do |el|
+            return false if !prc.call(el)
+        end
+        true
+    end
+
+    def my_flatten
+        flattened = []
+        self.my_each do |el|
+            el.is_a?(Array)? flattened += el.my_flatten : flattened << el
+        end
+        flattened
+    end
 end
+
+p [1, 2, 3, [4, [5, 6]], [[[7]], 8]].my_flatten # => [1, 2, 3, 4, 5, 6, 7, 8]
