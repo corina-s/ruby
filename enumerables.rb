@@ -53,11 +53,38 @@ class Array
         end
         flattened
     end
+
+    def my_zip(*args)
+        zipped = []
+        self.map.with_index do |n, i|
+            zipped[i] = [n]
+            args.my_each do |arr|
+                zipped[i] << arr[i]
+            end
+        end
+        zipped
+    end
+
+    def my_rotate(r = 1)
+        if r > 0
+            r.times {self.push(self.shift)}
+        else
+            (r.abs).times {self.unshift(self.pop)}
+        end
+        
+        self
+    end
 end
 
-p [1, 2, 3, [4, [5, 6]], [[[7]], 8]].my_flatten # => [1, 2, 3, 4, 5, 6, 7, 8]
-a = [ 4, 5, 6 ]
-b = [ 7, 8, 9 ]
-p [1, 2, 3].my_zip(a, b) # => [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
-a.my_zip([1,2], [8])   # => [[4, 1, 8], [5, 2, nil], [6, nil, nil]]
-p [ 1, 2].my_zip(a, b)    # => [[1, 4, 7], [2, 5, 8]]
+# p [1, 2, 3, [4, [5, 6]], [[[7]], 8]].my_flatten # => [1, 2, 3, 4, 5, 6, 7, 8]
+# a = [ 4, 5, 6 ]
+# b = [ 7, 8, 9 ]
+# p [1, 2, 3].my_zip(a, b) # => [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+# a.my_zip([1,2], [8])   # => [[4, 1, 8], [5, 2, nil], [6, nil, nil]]
+# p [ 1, 2].my_zip(a, b)    # => [[1, 4, 7], [2, 5, 8]]
+
+# a = [ "a", "b", "c", "d" ]
+# p a.my_rotate         #=> ["b", "c", "d", "a"]
+# p a.my_rotate(2)      #=> ["c", "d", "a", "b"]
+# p a.my_rotate(-3)     #=> ["b", "c", "d", "a"]
+# p a.my_rotate(15)     #=> ["d", "a", "b", "c"]
